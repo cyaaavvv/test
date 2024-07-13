@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-firestore.js"></script>
+    <!-- QR Code Scanner Library -->
+    <script src="https://unpkg.com/jsQR@1.4.3/umd/index.min.js"></script>
+</head>
+<body>
+    <h1>QR Code Scanner App</h1>
+    <button onclick="startQRScanner()">Start QR Scanner</button>
+    <div id="qrResult"></div>
+
+    <script src="/__/firebase/init.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to start QR scanner
+        function startQRScanner() {
+            // Code to start QR scanning and handle results
+            // Example: Dummy function for demo purposes
+            const dummyQRData = "QR_CODE_DATA"; // Replace with actual QR code data
+            handleQRScanResult(dummyQRData);
+        }
+
+        // Function to handle QR scan result
+        function handleQRScanResult(qrData) {
+            // Example: Retrieve item details from Firestore based on QR data
+            db.collection("items").doc(qrData).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const item = doc.data();
+                        displayItemDetails(item);
+                    } else {
+                        console.log("No such document!");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error getting document:", error);
+                });
+        }
+
+        // Function to display item details
+        function displayItemDetails(item) {
+            const qrResultDiv = document.getElementById("qrResult");
+            qrResultDiv.innerHTML = `
+                <h2>${item.name}</h2>
+                <p>Description: ${item.description}</p>
+                <p>Quantity Available: ${item.quantity}</p>
+                <button onclick="sellItem('${item.id}')">Sell Item</button>
+                <button onclick="cancelSell()">Cancel</button>
+            `;
+        }
+
+        // Function to sell item (reduce quantity in Firestore)
+        function sellItem(itemId) {
+            // Example: Update Firestore document to reduce item quantity
+            const itemRef = db.collection("items").doc(itemId);
+
+            // Run transaction to ensure atomic update
+            return firebase.firestore().runTransaction((transaction) => {
+                return transaction.get(itemRef).then((doc) => {
+                    if (!doc.exists) {
+                        throw "Document does not exist!";
+                    }
+
+                    // Update quantity based on your business logic
+                    const newQuantity = doc.data().quantity - 1; // Reduce by 1 for example
+
+                    transaction.update(itemRef, { quantity: newQuantity });
+                });
+            }).then(() => {
+                console.log("Transaction successfully committed!");
+            }).catch((error) => {
+                console.error("Transaction failed: ", error);
+            });
+        }
+
+        // Function to cancel sell action (no quantity change)
+        function cancelSell() {
+            // Example: Do nothing here for demo purposes
+            console.log("Sell action canceled.");
+        }
+    </script>
+</body>
+</html>
