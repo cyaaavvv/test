@@ -1,61 +1,67 @@
-/* Reset default margin and padding */
-* {
+body, html {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
 }
 
-/* Basic styles for container */
-.container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #Ff0000;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Title style */
-.title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* Button style */
-.scan-btn {
-    display: block;
+#scene-container {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 200px;
-    margin: 0 auto;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
+    height: 100%;
+    z-index: 1;
 }
 
-/* QR code result display */
-.qr-result {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+#welcome-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    color: aliceblue;
 }
 
-/* Item details style */
-.item-details {
-    margin-top: 10px;
+#nrj-logo {
+    width: 200px;
+    height: auto;
 }
 
-.item-details h2 {
-    font-size: 20px;
-    margin-bottom: 5px;
+#product-grid {
+    position: absolute;
+    top: 74%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 
-.item-details p {
-    margin-bottom: 5px;
+.product-item {
+    background-color: rgba(255, 255, 255, 0.63);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.product-item img {
+    max-width: 100%;
+    max-height: 10%;
+    object-fit: contain;
+}
+
+.hidden {
+    display: none;
 }
